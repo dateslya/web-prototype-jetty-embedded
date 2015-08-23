@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <title>Web Prototype on Jetty Embedded</title>
+    <script>
+        var socket = new WebSocket("ws://" + location.host);
+
+        socket.onopen = function() { alert("Connection opened...") };
+
+        socket.onclose = function() { alert("Connection closed...") };
+
+        socket.onmessage = function(event) {
+            var div = document.getElementById('msg');
+            div.innerHTML = div.innerHTML + '<br>' + event.data;
+        };
+    </script>
+</head>
+<body>
+<h1>Hello!!!</h1>
+<div id="msg"></div>
+<button onclick="socket.send('Msg')">Send</button>
+</body>
+</html>
