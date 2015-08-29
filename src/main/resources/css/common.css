@@ -1,3 +1,8 @@
 body {
     color: blue;
 }
+
+#graph {
+    width: 600px;
+    height: 300px;
+}

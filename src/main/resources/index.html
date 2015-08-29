@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"> 
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <title>Web Prototype on Jetty Embedded</title>
-    <script>
-        var socket = new WebSocket("ws://" + location.host);
-
-        socket.onopen = function() { alert("Connection opened...") };
-
-        socket.onclose = function() { alert("Connection closed...") };
-
-        socket.onmessage = function(event) {
-            var div = document.getElementById('msg');
-            div.innerHTML = div.innerHTML + '<br>' + event.data;
-        };
-    </script>
+    <script type="text/javascript" src="/js/flotr2.min.js"></script>
 </head>
 <body>
-<h1>Hello!!!</h1>
-<div id="msg"></div>
-<button onclick="socket.send('Msg')">Send</button>
+<h1>Real Time Graph</h1>
+<div id="graph"></div>
+<script type="text/javascript">
+    (function () {
+        var graph = document.getElementById('graph'),
+            socket = new WebSocket("ws://" + location.host);
+
+        socket.onopen = function() { console.log("Connection opened...") };
+
+        socket.onclose = function() { console.log("Connection closed...") };
+
+        socket.onmessage = function(event) {
+            var data = [];
+            var points = event.data.split('|');
+            for (var i = 0; i < points.length; i++) {
+                var point = points[i].split(':');
+                data.push([parseFloat(point[0]), parseFloat(point[1])]);
+            }
+            Flotr.draw(graph, [{data: data, label: 'y = sin(x)', lines: {fill: true}}], {});
+        };
+    })();
+</script>
 </body>
 </html>

@@ -1,17 +1,15 @@
 package ru.teslya.prototype;
 
-import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
-import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 
-import java.util.Collections;
+import ru.teslya.prototype.security.BasicAuthenticationHandler;
+import ru.teslya.prototype.websocket.SinWebSocket;
 
 /**
  * Created by Dmitry Teslya on 22.08.2015.
@@ -27,22 +25,11 @@ public class Application {
         LoginService loginService = new HashLoginService("Realm", BASE_PATH + "\\realm.properties");
         server.addBean(loginService);
 
-        Constraint constraint = new Constraint();
-        constraint.setName("auth");
-        constraint.setAuthenticate(true);
-        constraint.setRoles(new String[]{"admin"});
-
-        ConstraintMapping constraintMapping = new ConstraintMapping();
-        constraintMapping.setPathSpec("/*");
-        constraintMapping.setConstraint(constraint);
-
-        ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
-        securityHandler.setConstraintMappings(Collections.singletonList(constraintMapping));
-        securityHandler.setAuthenticator(new BasicAuthenticator());
+        ConstraintSecurityHandler securityHandler = new BasicAuthenticationHandler();
         securityHandler.setLoginService(loginService);
         server.setHandler(securityHandler);
 
-        WebSocketHandler webSocketHandler = new WebSocketHandler.Simple(EchoWebSocket.class);
+        WebSocketHandler webSocketHandler = new WebSocketHandler.Simple(SinWebSocket.class);
         securityHandler.setHandler(webSocketHandler);
 
         ResourceHandler resourceHandler = new ResourceHandler();
