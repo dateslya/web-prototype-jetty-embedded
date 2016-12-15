@@ -17,7 +17,7 @@ import ru.teslya.prototype.websocket.SinWebSocket;
 public class Application {
 
     public static final int PORT = 8080;
-    public static final String BASE_PATH = System.getProperty("user.home") + "\\workspace\\web-prototype-jetty-embedded\\target\\classes";
+    public static final String BASE_PATH = System.getProperty("user.home") + "\\IdeaProjects\\web-prototype-jetty-embedded\\target\\classes";
 
     public static void main(String... args) throws Exception {
         Server server = new Server(PORT);
